@@ -1,9 +1,12 @@
-import 'package:charity_app/di.dart';
-import 'package:charity_app/presentation/widget/meme_template_list_item.dart';
+import 'package:charity_app/core/app_route.dart';
+import 'package:charity_app/core/di.dart';
+import 'package:charity_app/presentation/meme_list/widget/meme_template_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:charity_app/presentation/meme_list/notifier/state/meme_template_list_state.dart';
+import 'package:charity_app/presentation/create_meme/screen/create_meme_screen.dart';
 
-import 'package:charity_app/presentation/notifier/state/meme_template_list_state.dart';
+import '../../../domain/model/meme_template.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -32,7 +35,11 @@ class HomeScreen extends ConsumerWidget {
                       separatorBuilder: (context, index) => const SizedBox(height: 20,),
                       itemCount: memeList.length,
                       itemBuilder: (context, index) {
-                        return MemeTemplateListItem(imageUrl: memeList[index].url, name: memeList[index].name);
+                        return GestureDetector(
+                            onTap: () => _redirectToCreateMemeScreen (context, memeList[index]),
+                            child: MemeTemplateListItem(
+                                imageUrl: memeList[index].url,
+                                name: memeList[index].name));
                       },
                     ),
                   ),
@@ -43,4 +50,11 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
   }
+
+   void _redirectToCreateMemeScreen(BuildContext context, final MemeTemplate meme) =>
+       Navigator.pushNamed(
+     context,
+     AppRoute.createMemeScreen,
+     arguments: meme
+   );
 }

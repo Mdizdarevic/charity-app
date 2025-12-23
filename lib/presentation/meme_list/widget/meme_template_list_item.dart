@@ -10,13 +10,16 @@ class MemeTemplateListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Image.network(
-          imageUrl,
-          width: 100,
-          height: 100,
-          fit: BoxFit.cover,),
+        Hero(
+          tag: 'meme_image_$name',
+          child: Image.network(
+            imageUrl,
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,),
+        ),
         const SizedBox(width: 20),
-        Text(name),
+        Expanded(child: Text(name, overflow: TextOverflow.visible)),
       ],
     );
   }

@@ -1,6 +1,6 @@
+import 'package:charity_app/core/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:charity_app/presentation/screen/home_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -14,10 +14,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: HomeScreen(),
+      initialRoute: AppRoute.homeScreen,
+      onGenerateRoute: (settings) => AppRoute.generateRoute (context, settings),
     );
   }
 }
