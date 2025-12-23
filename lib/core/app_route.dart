@@ -22,7 +22,6 @@ class AppRoute {
           child: CreateMemeScreen(memeTemplate: meme),
           settings: settings,
         );
-        // return _createAnimatedRoute(CreateMemeScreen(memeTemplate: meme));
       default:
         throw Exception('Route not found...');
     }

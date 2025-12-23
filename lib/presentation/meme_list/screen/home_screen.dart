@@ -16,6 +16,7 @@ class HomeScreen extends ConsumerWidget {
     final listState = ref.watch(memeTemplateListStateNotifier);
 
     return Scaffold(
+      backgroundColor: const Color(0xFF0B0B0B),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -24,7 +25,11 @@ class HomeScreen extends ConsumerWidget {
             children: [
               Text(
                   "Meme Templates",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                  )
               ),
               switch (listState) {
                 LoadingState() => Expanded(child: Center(child: CircularProgressIndicator())),
