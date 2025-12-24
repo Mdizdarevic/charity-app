@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "737729217306",
+    "project_id": "charity-app-a4357",
+    "storage_bucket": "charity-app-a4357.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737729217306:android:32f25cc12372830fe122a3",
+        "android_client_info": {
+          "package_name": "hr.algebra.charity_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOZI-l4AUmHDZ97YOOXjzUod2ZnXLK-lk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
