@@ -2,9 +2,9 @@ class Charity {
   final String name;
   final String ein;
   final String description;
-  final String imageUrl; // Renamed from logoUrl for generic UI use
+  final String imageUrl;
   final String location;
-  final bool isVerified; // Maps from Every.org's 'isDisbursable'
+  final bool isVerified;
   final String profileUrl;
   final String causeCategory;
 

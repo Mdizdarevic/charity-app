@@ -13,13 +13,7 @@ class CharityApiClient {
 
   Future<Map<String, dynamic>> getAllCharities() async {
     try {
-      // Try to hit Google just to check connectivity
-      final testResponse = await http.get(Uri.parse('https://google.com'));
-      print('Google Ping Status: ${testResponse.statusCode}');
-
-      // If that works, try the real API
       final url = Uri.parse('$baseUrl/search/$searchTerm?apiKey=$apiKey&take=50');
-      print(url);
       final response = await http.get(url);
       return json.decode(response.body);
     } catch (e) {

@@ -26,6 +26,6 @@ class SplashScreen extends StatelessWidget {
 
   void redirectToTheNextScreen(BuildContext context) async {
     await Future.delayed(const Duration(seconds: 2));
-    Navigator.of(context).pushReplacementNamed(AppRouter.charitySearchScreen);
+    Navigator.of(context).pushReplacementNamed(AppRouter.mainWrapper);
   }
 }

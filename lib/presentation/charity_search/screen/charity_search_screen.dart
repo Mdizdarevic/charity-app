@@ -1,9 +1,10 @@
+import 'package:charity_app/presentation/core/widget/api_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:charity_app/di.dart';
 import 'package:charity_app/domain/model/charity.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:charity_app/presentation/core/style/charity_item_styles.dart';
+import 'package:charity_app/presentation/charities/screen/charity_details_screen.dart';
 
 class CharitySearchScreen extends ConsumerStatefulWidget {
   const CharitySearchScreen({super.key});
@@ -26,7 +27,7 @@ class _CharitySearchScreenState extends ConsumerState<CharitySearchScreen> {
         elevation: 0,
         centerTitle: true,
         title: const Text(
-          "Charities",
+          "Find Charities",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         bottom: PreferredSize(
@@ -73,20 +74,40 @@ class _CharitySearchScreenState extends ConsumerState<CharitySearchScreen> {
       body: FutureBuilder<dynamic>(
         future: getAllCharities.call(),
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(color: Color(0xFFB82065)),
+            );
+          }
 
-            final List<Charity> charities = snapshot.data?.value ?? [];
-            final filteredCharities = charities.where((charity) {
+          if (snapshot.hasError) {
+            return ApiError(
+              onRetry: () {
+                setState(() {});
+              },
+            );
+          }
+
+          final List<Charity> charities = snapshot.data?.value ?? [];
+          final filteredCharities = charities.where((charity) {
             final query = _searchController.text.toLowerCase();
-
             final bool matchesName = charity.name.toLowerCase().contains(query);
-
             final bool matchesDescription = charity.description.toLowerCase().contains(query);
-
             final String categoryLabel = _getLabelFromIcon(CharityItemStyles.getIcon(charity)).toLowerCase();
             final bool matchesCategory = categoryLabel.contains(query);
 
             return matchesName || matchesDescription || matchesCategory;
           }).toList();
+
+          // 3. Handle Empty Results State (Optional but recommended)
+          if (filteredCharities.isEmpty) {
+            return const Center(
+              child: Text(
+                "No 'Cherries' found matching your search.",
+                style: TextStyle(color: Colors.grey, fontSize: 16),
+              ),
+            );
+          }
 
           return ListView.builder(
             itemCount: filteredCharities.length,
@@ -112,35 +133,61 @@ class _CharitySearchScreenState extends ConsumerState<CharitySearchScreen> {
                 child: ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   leading: Container(
-                    width: 52, height: 52,
-                    decoration: BoxDecoration(color: color.withOpacity(0.12), shape: BoxShape.circle),
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.12), // Updated to withValues
+                      shape: BoxShape.circle,
+                    ),
                     child: Icon(icon, color: color, size: 26),
                   ),
                   title: Text(
-                      charity.name,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w700
-                      ),
+                    charity.name,
+                    style: const TextStyle(fontWeight: FontWeight.w700),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   subtitle: Text(
-                      charity.description,
-                      // maxLines: 1,
-                      // overflow: TextOverflow.ellipsis
+                    charity.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  trailing: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
+                  trailing: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
-                        displayCategory,
-                        style: TextStyle(color: Colors.grey[400], fontSize: 11, fontWeight: FontWeight.w600),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Text(
+                            displayCategory,
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Icon(Icons.arrow_forward_ios_rounded, size: 12, color: Colors.grey[300]),
+                        ],
                       ),
-                      const SizedBox(width: 4),
-                      Icon(Icons.arrow_forward_ios_rounded, size: 12, color: Colors.grey[300]),
+                      const SizedBox(height: 6),
+                      // Your verified Cherry brand icon
+                      Image.asset(
+                        'assets/images/charity_splash_image.png',
+                        height: 28,
+                        fit: BoxFit.contain,
+                      ),
                     ],
                   ),
-                  onTap: () => launchUrl(Uri.parse(charity.profileUrl)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CharityDetailScreen(charity: charity),
+                      ),
+                    );
+                  },
                 ),
               );
             },
