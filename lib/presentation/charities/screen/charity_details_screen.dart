@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:charity_app/domain/model/charity.dart';
 import 'package:charity_app/presentation/core/style/charity_item_styles.dart';
+import 'package:charity_app/domain/favorites/favorites_manager.dart'; // Import added here
 import 'package:url_launcher/url_launcher.dart';
 
 class CharityDetailScreen extends StatelessWidget {
@@ -21,13 +22,31 @@ class CharityDetailScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.black),
         title: Text(charity.causeCategory.toUpperCase(),
             style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.bold)),
+        actions: [
+          ValueListenableBuilder<List<Charity>>(
+            valueListenable: FavoritesManager.favoriteCharities,
+            builder: (context, favorites, child) {
+              final isFav = FavoritesManager.isFavorite(charity);
+              return IconButton(
+                iconSize: 32,
+                icon: Icon(
+                  isFav ? Icons.favorite : Icons.favorite_border,
+                  color: isFav ? const Color(0xFFB82065) : Colors.grey,
+                ),
+                onPressed: () {
+                  FavoritesManager.toggleFavorite(charity);
+                },
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Center(
               child: Container(
                 width: 100, height: 100,
@@ -41,11 +60,9 @@ class CharityDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-
             Text(charity.name,
                 style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-
 
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),

@@ -6,7 +6,7 @@ class AboutBentoCard extends StatelessWidget {
   final IconData icon;
   final Color color;
   final Color textColor;
-  final bool isMainBrandCard; // Changed name for better clarity
+  final bool isMainBrandCard;
 
   const AboutBentoCard({
     super.key,
@@ -15,7 +15,7 @@ class AboutBentoCard extends StatelessWidget {
     required this.icon,
     required this.color,
     required this.textColor,
-    this.isMainBrandCard = false, // Defaults to false
+    this.isMainBrandCard = false,
   });
 
   @override
@@ -28,7 +28,6 @@ class AboutBentoCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            // Modern transparency syntax
             color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
@@ -54,7 +53,6 @@ class AboutBentoCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               height: 1.5,
-              // Adjusts text opacity based on whether it's a dark or light card
               color: isMainBrandCard
                   ? Colors.white.withValues(alpha: 0.9)
                   : Colors.black87,

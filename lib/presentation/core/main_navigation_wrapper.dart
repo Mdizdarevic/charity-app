@@ -1,6 +1,6 @@
+import 'package:charity_app/presentation/favorites/screen/favorites_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:charity_app/presentation/charity_search/screen/charity_search_screen.dart';
-
 import 'package:charity_app/presentation/about/screen/about_screen.dart';
 
 class MainNavigationWrapper extends StatefulWidget {
@@ -41,9 +41,8 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
               },
             ),
 
-            const Center(child: Text("Favorites")),
+            const FavoritesScreen(),
             const Center(child: Text("Profile")),
-            // const Center(child: Text("About")),
             const AboutScreen(),
           ],
         ),
