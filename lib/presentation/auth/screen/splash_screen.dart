@@ -15,7 +15,7 @@ class SplashScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/images/camping_image.png'),
+              Image.asset('assets/images/charity_splash_image.png'),
               Lottie.asset('assets/animations/loading_dots.json', width: 150),
             ],
           ),
@@ -26,6 +26,6 @@ class SplashScreen extends StatelessWidget {
 
   void redirectToTheNextScreen(BuildContext context) async {
     await Future.delayed(const Duration(seconds: 2));
-    Navigator.of(context).pushReplacementNamed(AppRouter.signInScreen);
+    Navigator.of(context).pushReplacementNamed(AppRouter.charitySearchScreen);
   }
 }
