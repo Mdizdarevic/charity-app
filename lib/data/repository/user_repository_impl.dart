@@ -14,12 +14,20 @@ class UserRepositoryImpl implements UserRepository {
       final userCredential = await firebaseClient.signIn(email, password);
       return Result.ok(userCredential.user!);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
-        return Result.error(Exception("Invalid email or password"));
-      }
-      return Result.error(Exception("Authentication internal error."));
-    } catch (e) {
-      return Result.error(Exception("There was an error."));
+      return Result.error(Exception(e.message ?? "Sign in failed"));
     }
   }
+
+  @override
+  Future<Result<User>> signUp(String email, String password) async {
+    try {
+      final userCredential = await firebaseClient.signUp(email, password);
+      return Result.ok(userCredential.user!);
+    } on FirebaseAuthException catch (e) {
+      return Result.error(Exception(e.message ?? "Registration failed"));
+    }
+  }
+
+  @override
+  Future<void> signOut() => firebaseClient.signOut();
 }
