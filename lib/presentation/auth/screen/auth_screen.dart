@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:charity_app/presentation/auth/notifier/auth_notifier.dart';
 import 'package:charity_app/presentation/core/widget/auth_components.dart';
+import 'package:lottie/lottie.dart';
 
 // Modern Notifier for the toggle state
 class AuthModeNotifier extends Notifier<bool> {
@@ -64,7 +65,7 @@ class AuthScreen extends ConsumerWidget {
                       next.message,
                       style: const TextStyle(
                         color: Colors.black87,
-                        fontSize: 14,
+                        fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -91,14 +92,20 @@ class AuthScreen extends ConsumerWidget {
         child: Column(
           children: [
             const SizedBox(height: 60),
-            Image.asset('assets/images/camping_image.png', height: 200),
+            Lottie.asset('assets/animations/profile.json', height: 150),
             const SizedBox(height: 20),
             Text(isSignIn ? "Please Sign In" : "Create Account",
                 style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             const SizedBox(height: 24),
-
-            CustomAuthField(controller: emailController, hint: "Email"),
-            CustomAuthField(controller: passwordController, hint: "Password", isPassword: true),
+            CustomAuthField(
+                controller: emailController,
+                hint: "Email"
+            ),
+            CustomAuthField(
+                controller: passwordController,
+                hint: "Password",
+                isPassword: true
+            ),
 
             if (!isSignIn)
               CustomAuthField(controller: confirmPasswordController, hint: "Confirm Password", isPassword: true),

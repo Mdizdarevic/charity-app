@@ -50,7 +50,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 Image.asset("assets/images/sign_in_image.png", height: 275),
                 const SizedBox(height: 20),
                 Text(
-                  "Please sign in to your account.",
+                  "Please Sign In",
                   style: context.textSubtitle,
                 ),
                 const SizedBox(height: 40),

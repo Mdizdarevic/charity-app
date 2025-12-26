@@ -24,6 +24,7 @@ class CustomAuthField extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade300),
       ),
       child: TextField(
+        keyboardType: TextInputType.emailAddress,
         controller: controller,
         obscureText: isPassword,
         decoration: InputDecoration(

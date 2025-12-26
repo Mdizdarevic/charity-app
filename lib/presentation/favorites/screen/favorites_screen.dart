@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:charity_app/domain/favorites/favorites_manager.dart';
 import 'package:charity_app/presentation/charities/screen/charity_details_screen.dart';
 import 'package:charity_app/presentation/core/style/charity_item_styles.dart';
+import 'package:lottie/lottie.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
@@ -9,7 +10,7 @@ class FavoritesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F2),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -30,8 +31,8 @@ class FavoritesScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Image.asset(
-                      'assets/images/empty_favorites.png',
+                    Lottie.asset(
+                      'assets/animations/heart.json',
                       height: 250,
                       fit: BoxFit.contain,
                     ),

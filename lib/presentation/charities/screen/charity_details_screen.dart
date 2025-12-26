@@ -29,14 +29,24 @@ class CharityDetailScreen extends StatelessWidget {
               final isFav = FavoritesManager.isFavorite(charity);
               return IconButton(
                 iconSize: 32,
-                icon: Icon(
-                  isFav ? Icons.favorite : Icons.favorite_border,
-                  color: isFav ? const Color(0xFFB82065) : Colors.grey,
-                ),
                 onPressed: () {
                   FavoritesManager.toggleFavorite(charity);
                 },
-              );
+                icon: TweenAnimationBuilder<double>(
+                  duration: const Duration(milliseconds: 150),
+                  curve: Curves.easeInOut,
+                  tween: Tween(begin: 1.0, end: isFav ? 1.3 : 1.0),
+                  builder: (context, scale, child) {
+                    return Transform.scale(
+                      scale: scale,
+                      child: Icon(
+                        isFav ? Icons.favorite : Icons.favorite_border,
+                        color: isFav ? const Color(0xFFB82065) : Colors.grey,
+                      ),
+                    );
+                  },
+                ),
+              );;
             },
           ),
           const SizedBox(width: 8),

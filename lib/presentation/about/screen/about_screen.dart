@@ -1,5 +1,6 @@
 import 'package:charity_app/presentation/about/widget/about_bento_card.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:charity_app/presentation/about/widget/about_bento_card.dart';
 
@@ -55,7 +56,7 @@ class AboutScreen extends StatelessWidget {
             AboutBentoCard(
               title: "\$96 Million",
               content: "Scammers exploit our natural desire to help others using AI, fake identities, and realistic-looking donation sites. In 2024, the FBI reported nearly \$96 million in losses to fraudulent charities. Cherry-T was built to stop this.",
-              icon: Icons.verified_user_outlined,
+              lottieAsset: 'assets/animations/thief.json',
               color: Colors.white,
               textColor: Colors.black87,
               isMainBrandCard: false,
@@ -64,7 +65,7 @@ class AboutScreen extends StatelessWidget {
             AboutBentoCard(
               title: "What is a 'Cherry'?",
               content: "A 'Cherry' is more than just a charity, it's a promise. Every organization marked with our Cherry icon has been IRS-verified as a legitimate 501(c)(3) entity. When you pick a Cherry, you're picking a scam-free path to making an impact.",
-              icon: Icons.auto_awesome_rounded,
+              lottieAsset: 'assets/animations/badge.json',
               color: const Color(0xFFB82065).withValues(alpha: 0.1),
               textColor: const Color(0xFFB82065),
               isMainBrandCard: false,

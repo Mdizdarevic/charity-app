@@ -5,6 +5,7 @@ import 'package:charity_app/di.dart';
 import 'package:charity_app/domain/model/charity.dart';
 import 'package:charity_app/presentation/core/style/charity_item_styles.dart';
 import 'package:charity_app/presentation/charities/screen/charity_details_screen.dart';
+import 'package:lottie/lottie.dart';
 
 class CharitySearchScreen extends ConsumerStatefulWidget {
   const CharitySearchScreen({super.key});
@@ -48,25 +49,33 @@ class _CharitySearchScreenState extends ConsumerState<CharitySearchScreen> {
                   ),
                 ],
               ),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: "Search",
-                  hintStyle: TextStyle(color: Colors.grey[500], fontSize: 16),
-                  prefixIcon: Icon(Icons.search, color: Colors.grey[500], size: 20),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(
-                    icon: const Icon(Icons.cancel, size: 18),
-                    onPressed: () => setState(() => _searchController.clear()),
-                  )
-                      : null,
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: "Search",
+                    hintStyle: TextStyle(color: Colors.grey[500], fontSize: 16),
+                    // Changed only the prefixIcon from Icon to Lottie.asset
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.all(12.0), // Adjust padding to center the animation
+                      child: Lottie.asset(
+                        'assets/animations/search.json',
+                        width: 20,
+                        height: 20,
+                      ),
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                      icon: const Icon(Icons.cancel, size: 18),
+                      onPressed: () => setState(() => _searchController.clear()),
+                    )
+                        : null,
+                  ),
+                  onChanged: (value) {
+                    setState(() {});
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {});
-                },
-              ),
             ),
           ),
         ),

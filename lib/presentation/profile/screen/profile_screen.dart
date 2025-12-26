@@ -15,7 +15,13 @@ class ProfileScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text("Profile", style: TextStyle(color: Colors.black)),
+        title: const Text(
+            "Profile",
+            style: TextStyle(
+                color: Colors.black,
+              fontWeight: FontWeight.bold
+            )
+        ),
         centerTitle: true,
       ),
       body: authState.when(
