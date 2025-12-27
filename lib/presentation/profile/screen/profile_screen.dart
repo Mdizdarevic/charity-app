@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:charity_app/di.dart'; // IMPORTANT: This gives access to authStateProvider
 import 'package:charity_app/presentation/auth/screen/auth_screen.dart';
+import 'package:lottie/lottie.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -31,11 +32,12 @@ class ProfileScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const CircleAvatar(
+                   CircleAvatar(
                     radius: 50,
                     backgroundColor: Color(0xFFFDEEF4),
-                    child: Icon(Icons.person, size: 50, color: Color(0xFFB82065)),
-                  ),
+                    child: Lottie.asset(
+                        'assets/animations/signed_in.json')
+                   ),
                   const SizedBox(height: 16),
                   Text(user.email ?? "Guest User",
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),

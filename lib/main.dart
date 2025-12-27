@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:charity_app/presentation/core/app_router.dart';
 import 'package:charity_app/presentation/core/style/app_theme.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter(); // Starts the engine
+  await Hive.openBox<String>('searchHistoryBox'); // Pre-opens the container
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

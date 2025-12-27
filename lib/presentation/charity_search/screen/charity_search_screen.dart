@@ -6,6 +6,7 @@ import 'package:charity_app/domain/model/charity.dart';
 import 'package:charity_app/presentation/core/style/charity_item_styles.dart';
 import 'package:charity_app/presentation/charities/screen/charity_details_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:charity_app/data/local/search_history_service.dart';
 
 class CharitySearchScreen extends ConsumerStatefulWidget {
   const CharitySearchScreen({super.key});
@@ -49,159 +50,226 @@ class _CharitySearchScreenState extends ConsumerState<CharitySearchScreen> {
                   ),
                 ],
               ),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: "Search",
-                    hintStyle: TextStyle(color: Colors.grey[500], fontSize: 16),
-                    // Changed only the prefixIcon from Icon to Lottie.asset
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.all(12.0), // Adjust padding to center the animation
-                      child: Lottie.asset(
-                        'assets/animations/search.json',
-                        width: 20,
-                        height: 20,
-                      ),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: "Search",
+                  hintStyle: TextStyle(color: Colors.grey[500], fontSize: 16),
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Lottie.asset(
+                      'assets/animations/search.json',
+                      width: 20,
+                      height: 20,
                     ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                    suffixIcon: _searchController.text.isNotEmpty
-                        ? IconButton(
-                      icon: const Icon(Icons.cancel, size: 18),
-                      onPressed: () => setState(() => _searchController.clear()),
-                    )
-                        : null,
                   ),
-                  onChanged: (value) {
-                    setState(() {});
-                  },
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                    icon: const Icon(Icons.cancel, size: 18),
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() {});
+                    },
+                  )
+                      : null,
                 ),
+                onChanged: (value) {
+                  setState(() {});
+                },
+                onSubmitted: (value) async {
+                  print("DEBUG: Saving search term: $value"); // Look at your console!
+                  if (value.trim().isNotEmpty) {
+                    await SearchHistoryService().addSearchTerm(value.trim());
+                    setState(() {});
+                  }
+                },
+              ),
             ),
           ),
         ),
       ),
-      body: FutureBuilder<dynamic>(
-        future: getAllCharities.call(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(color: Color(0xFFB82065)),
-            );
-          }
+      // --- WRAPPED BODY IN COLUMN TO SHOW HISTORY ON TOP ---
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 1. RECENT SEARCHES SECTION (LO6)
+          if (_searchController.text.isEmpty)
+            FutureBuilder<List<String>>(
+              future: SearchHistoryService().getHistory(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.data!.isEmpty) return const SizedBox.shrink();
 
-          if (snapshot.hasError) {
-            return ApiError(
-              onRetry: () {
-                setState(() {});
-              },
-            );
-          }
-
-          final List<Charity> charities = snapshot.data?.value ?? [];
-          final filteredCharities = charities.where((charity) {
-            final query = _searchController.text.toLowerCase();
-            final bool matchesName = charity.name.toLowerCase().contains(query);
-            final bool matchesDescription = charity.description.toLowerCase().contains(query);
-            final String categoryLabel = _getLabelFromIcon(CharityItemStyles.getIcon(charity)).toLowerCase();
-            final bool matchesCategory = categoryLabel.contains(query);
-
-            return matchesName || matchesDescription || matchesCategory;
-          }).toList();
-
-          // 3. Handle Empty Results State (Optional but recommended)
-          if (filteredCharities.isEmpty) {
-            return const Center(
-              child: Text(
-                "No 'Cherries' found matching your search.",
-                style: TextStyle(color: Colors.grey, fontSize: 16),
-              ),
-            );
-          }
-
-          return ListView.builder(
-            itemCount: filteredCharities.length,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            itemBuilder: (context, index) {
-              final charity = filteredCharities[index];
-              final color = CharityItemStyles.getColor(charity);
-              final icon = CharityItemStyles.getIcon(charity);
-
-              String displayCategory = charity.causeCategory.isNotEmpty
-                  ? charity.causeCategory.toUpperCase()
-                  : _getLabelFromIcon(icon);
-
-              return Container(
-                margin: const EdgeInsets.only(bottom: 2),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(
-                    top: index == 0 ? const Radius.circular(30) : Radius.zero,
-                    bottom: index == filteredCharities.length - 1 ? const Radius.circular(30) : Radius.zero,
-                  ),
-                ),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  leading: Container(
-                    width: 52,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.12), // Updated to withValues
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(icon, color: color, size: 26),
-                  ),
-                  title: Text(
-                    charity.name,
-                    style: const TextStyle(fontWeight: FontWeight.w700),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Text(
-                    charity.description,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            displayCategory,
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          const Text(
+                            "Recent Searches",
+                            style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12),
                           ),
-                          const SizedBox(width: 4),
-                          Icon(Icons.arrow_forward_ios_rounded, size: 12, color: Colors.grey[300]),
+                          GestureDetector(
+                            onTap: () async {
+                              await SearchHistoryService().clearHistory();
+                              setState(() {});
+                            },
+                            child: const Icon(Icons.delete_outline, color: Colors.grey, size: 16),
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 6),
-                      // Your verified Cherry brand icon
-                      Image.asset(
-                        'assets/images/charity_splash_image.png',
-                        height: 28,
-                        fit: BoxFit.contain,
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        children: snapshot.data!.map((term) => ActionChip(
+                          backgroundColor: const Color(0xFFB82065).withValues(alpha: 0.05),
+                          side: const BorderSide(color: Color(0xFFB82065), width: 0.5),
+                          label: Text(term, style: const TextStyle(fontSize: 12)),
+                          onPressed: () {
+                            _searchController.text = term;
+                            setState(() {});
+                          },
+                        )).toList(),
                       ),
                     ],
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CharityDetailScreen(charity: charity),
+                );
+              },
+            ),
+
+          // 2. SEARCH RESULTS SECTION
+          Expanded(
+            child: FutureBuilder<dynamic>(
+              future: getAllCharities.call(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(color: Color(0xFFB82065)),
+                  );
+                }
+
+                if (snapshot.hasError) {
+                  return ApiError(
+                    onRetry: () {
+                      setState(() {});
+                    },
+                  );
+                }
+
+                final List<Charity> charities = snapshot.data?.value ?? [];
+                final filteredCharities = charities.where((charity) {
+                  final query = _searchController.text.toLowerCase();
+                  final bool matchesName = charity.name.toLowerCase().contains(query);
+                  final bool matchesDescription = charity.description.toLowerCase().contains(query);
+                  final String categoryLabel =
+                  _getLabelFromIcon(CharityItemStyles.getIcon(charity)).toLowerCase();
+                  final bool matchesCategory = categoryLabel.contains(query);
+
+                  return matchesName || matchesDescription || matchesCategory;
+                }).toList();
+
+                if (filteredCharities.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      "No 'Cherries' found matching your search.",
+                      style: TextStyle(color: Colors.grey, fontSize: 16),
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  itemCount: filteredCharities.length,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  itemBuilder: (context, index) {
+                    final charity = filteredCharities[index];
+                    final color = CharityItemStyles.getColor(charity);
+                    final icon = CharityItemStyles.getIcon(charity);
+
+                    String displayCategory = charity.causeCategory.isNotEmpty
+                        ? charity.causeCategory.toUpperCase()
+                        : _getLabelFromIcon(icon);
+
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(
+                          top: index == 0 ? const Radius.circular(30) : Radius.zero,
+                          bottom: index == filteredCharities.length - 1
+                              ? const Radius.circular(30)
+                              : Radius.zero,
+                        ),
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        leading: Container(
+                          width: 52,
+                          height: 52,
+                          decoration: BoxDecoration(
+                            color: color.withOpacity(0.12),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(icon, color: color, size: 26),
+                        ),
+                        title: Text(
+                          charity.name,
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: Text(
+                          charity.description,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                Text(
+                                  displayCategory,
+                                  style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(Icons.arrow_forward_ios_rounded,
+                                    size: 12, color: Colors.grey[300]),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Image.asset(
+                              'assets/images/charity_splash_image.png',
+                              height: 28,
+                              fit: BoxFit.contain,
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CharityDetailScreen(charity: charity),
+                            ),
+                          );
+                        },
                       ),
                     );
                   },
-                ),
-              );
-            },
-          );
-        },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
