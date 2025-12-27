@@ -91,7 +91,6 @@ class AuthScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const SizedBox(height: 60),
             Lottie.asset('assets/animations/profile.json', height: 150),
             const SizedBox(height: 20),
             Text(isSignIn ? "Please Sign In" : "Create Account",
