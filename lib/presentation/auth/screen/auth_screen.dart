@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:charity_app/presentation/auth/notifier/auth_notifier.dart';
 import 'package:charity_app/presentation/core/widget/auth_components.dart';
 import 'package:lottie/lottie.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 // Modern Notifier for the toggle state
 class AuthModeNotifier extends Notifier<bool> {
@@ -17,6 +19,9 @@ class AuthScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Using a ValueNotifier to hold the image locally without creating new global providers
+    final profileImageNotifier = ValueNotifier<File?>(null);
+
     ref.listen<AuthState>(authNotifierProvider, (previous, next) {
       if (next is AuthError) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -89,33 +94,81 @@ class AuthScreen extends ConsumerWidget {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            Lottie.asset('assets/animations/profile.json', height: 150),
-            const SizedBox(height: 20),
-            Text(isSignIn ? "Please Sign In" : "Create Account",
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 24),
-            CustomAuthField(
+          child: Column(
+            children: [
+              // --- 1. SIGN IN MODE: Show Lottie ONLY ---
+              if (isSignIn) ...[
+                Lottie.asset('assets/animations/profile.json', height: 150),
+                const SizedBox(height: 20),
+              ],
+
+              // --- 2. CREATE ACCOUNT MODE: Show Camera ONLY ---
+              if (!isSignIn) ...[
+                const SizedBox(height: 20),
+                ValueListenableBuilder<File?>(
+                  valueListenable: profileImageNotifier,
+                  builder: (context, file, _) {
+                    return GestureDetector(
+                      onTap: () async {
+                        // LO1: Accessing Gallery Hardware
+                        final pickedFile = await ImagePicker().pickImage(
+                          source: ImageSource.gallery,
+                          maxWidth: 512,
+                        );
+                        if (pickedFile != null) {
+                          profileImageNotifier.value = File(pickedFile.path);
+                        }
+                      },
+                      child: CircleAvatar(
+                        radius: 60,
+                        backgroundColor: const Color(0xFFB82065).withOpacity(0.1),
+                        backgroundImage: file != null ? FileImage(file) : null,
+                        child: file == null
+                            ? const Icon(
+                          Icons.add_a_photo,
+                          color: Color(0xFFB82065),
+                          size: 40,
+                        )
+                            : null,
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 10),
+              ],
+
+              // --- 3. MODE HEADER ---
+              Text(
+                isSignIn ? "Please Sign In" : "Create Account",
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 24),
+
+              // --- 4. INPUT FIELDS ---
+              CustomAuthField(
                 controller: emailController,
-                hint: "Email"
-            ),
-            CustomAuthField(
+                hint: "Email",
+              ),
+              CustomAuthField(
                 controller: passwordController,
                 hint: "Password",
-                isPassword: true
-            ),
+                isPassword: true,
+              ),
 
-            if (!isSignIn)
-              CustomAuthField(controller: confirmPasswordController, hint: "Confirm Password", isPassword: true),
+              if (!isSignIn)
+                CustomAuthField(
+                  controller: confirmPasswordController,
+                  hint: "Confirm Password",
+                  isPassword: true,
+                ),
 
-            const SizedBox(height: 30),
+              const SizedBox(height: 30),
 
-            // Button switches based on AuthNotifier state
-            if (authState is AuthLoading)
-              const CircularProgressIndicator()
-            else
-              AuthButton(
+              // --- 5. ACTION BUTTON ---
+              if (authState is AuthLoading)
+                const CircularProgressIndicator()
+              else
+                AuthButton(
                 text: isSignIn ? "Sign In" : "Sign Up",
                 onPressed: () {
                   final email = emailController.text.trim();
@@ -124,18 +177,28 @@ class AuthScreen extends ConsumerWidget {
                   if (isSignIn) {
                     ref.read(authNotifierProvider.notifier).signIn(email, password);
                   } else {
-                    ref.read(authNotifierProvider.notifier).signUp(email, password);
-                  }
-                },
-              ),
+                  // Access the value from your ValueNotifier
+                  final imageFile = profileImageNotifier.value;
 
-            const SizedBox(height: 16),
-            TextButton(
-              onPressed: () => ref.read(authModeProvider.notifier).toggle(),
-              child: Text(isSignIn ? "Don't have an account? Sign Up" : "Already have an account? Sign In"),
-            ),
-          ],
-        ),
+                  // Now pass all 3: email, password, AND the image
+                  ref.read(authNotifierProvider.notifier).signUp(email, password, imageFile);
+                    }
+                  },
+                ),
+
+              const SizedBox(height: 16),
+
+              // --- 6. TOGGLE MODE BUTTON ---
+              TextButton(
+                onPressed: () => ref.read(authModeProvider.notifier).toggle(),
+                child: Text(
+                  isSignIn
+                      ? "Don't have an account? Sign Up"
+                      : "Already have an account? Sign In",
+                ),
+              ),
+            ],
+          ),
       ),
     );
   }

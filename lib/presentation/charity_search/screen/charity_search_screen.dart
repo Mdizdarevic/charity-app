@@ -1,4 +1,5 @@
 import 'package:charity_app/presentation/core/widget/api_error.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:charity_app/di.dart';
@@ -141,14 +142,22 @@ class _CharitySearchScreenState extends ConsumerState<CharitySearchScreen> {
               },
             ),
 
-          // 2. SEARCH RESULTS SECTION
           Expanded(
             child: FutureBuilder<dynamic>(
               future: getAllCharities.call(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(color: Color(0xFFB82065)),
+                  return Center(
+                    child: Theme(
+                        data: Theme.of(context).copyWith(
+                          cupertinoOverrideTheme: const CupertinoThemeData(
+                            primaryColor: Color(0xFFB82065),
+                          ),
+                        ),
+                        child: const CircularProgressIndicator.adaptive(
+                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFB82065)),
+                        ),
+                    ),
                   );
                 }
 

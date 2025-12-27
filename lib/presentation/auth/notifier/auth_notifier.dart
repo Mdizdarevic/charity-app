@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:charity_app/di.dart';
 import 'package:charity_app/domain/model/result.dart'; // Ensure this path is correct!
@@ -50,12 +52,14 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  Future<void> signUp(String email, String password) async {
+  // Added File? image parameter to match the new flow
+  Future<void> signUp(String email, String password, File? image) async {
     state = const AuthLoading();
 
-    final result = await ref.read(userSignUpUseCaseProvider).call(email, password);
+    // Pass the image into the UseCase call
+    final result = await ref.read(userSignUpUseCaseProvider).call(email, password, image);
 
-    // Use pattern matching here as well
+    // Pattern matching remains exactly as you had it
     switch (result) {
       case Ok(value: _):
         state = const AuthSuccess();
