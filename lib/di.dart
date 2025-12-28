@@ -9,7 +9,6 @@ import 'package:charity_app/domain/repository/user_repository.dart';
 import 'package:charity_app/domain/usecase/get_all_charities_use_case.dart';
 import 'package:charity_app/domain/usecase/user_sign_in_use_case.dart';
 import 'package:charity_app/domain/usecase/user_sign_up_use_case.dart';
-// Note: Ensure these paths match your actual notifier filenames
 import 'package:charity_app/presentation/auth/notifier/auth_notifier.dart';
 
 // *************** CLIENT *************** //
@@ -40,7 +39,6 @@ final getAllCharitiesUseCaseProvider = Provider<GetAllCharitiesUseCase>(
 );
 
 // *************** AUTH STATE *************** //
-// This allows ProfileScreen to listen to the login status
 final authStateProvider = StreamProvider<User?>((ref) {
   return ref.watch(firebaseAuthClientProvider).authStateChanges;
 });

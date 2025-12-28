@@ -80,7 +80,6 @@ class _CharitySearchScreenState extends ConsumerState<CharitySearchScreen> {
                   setState(() {});
                 },
                 onSubmitted: (value) async {
-                  print("DEBUG: Saving search term: $value"); // Look at your console!
                   if (value.trim().isNotEmpty) {
                     await SearchHistoryService().addSearchTerm(value.trim());
                     setState(() {});
@@ -91,11 +90,9 @@ class _CharitySearchScreenState extends ConsumerState<CharitySearchScreen> {
           ),
         ),
       ),
-      // --- WRAPPED BODY IN COLUMN TO SHOW HISTORY ON TOP ---
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. RECENT SEARCHES SECTION (LO6)
           if (_searchController.text.isEmpty)
             FutureBuilder<List<String>>(
               future: SearchHistoryService().getHistory(),

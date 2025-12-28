@@ -13,7 +13,6 @@ class ApiError extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Using your 404/Error image
             Image.asset(
               'assets/images/error_image.png',
               height: 250,
@@ -38,7 +37,6 @@ class ApiError extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            // Retry Button using your brand color
             SizedBox(
               width: 150,
               height: 50,

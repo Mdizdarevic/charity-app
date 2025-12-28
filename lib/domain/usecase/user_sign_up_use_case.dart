@@ -8,9 +8,7 @@ class UserSignUpUseCase {
 
   UserSignUpUseCase(this.repository);
 
-  // Update: Accept the profileImage here
   Future<Result<User>> call(String email, String password, File? profileImage) async {
-    // Pass it along to the repository
     return await repository.signUp(email, password, profileImage);
   }
 }

@@ -12,7 +12,6 @@ class MainNavigationWrapper extends StatefulWidget {
 }
 
 class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
-  // 1. Search is now at index 0
   int _selectedIndex = 0;
 
   final GlobalKey<NavigatorState> _searchNavKey = GlobalKey<NavigatorState>();
@@ -22,17 +21,15 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
-        // 2. Updated to check index 0 for the nested navigator
         if (_selectedIndex == 0 && await _searchNavKey.currentState!.maybePop()) {
           return;
         }
       },
       child: Scaffold(
-        extendBody: true, // Allows content to scroll behind the transparent bar
+        extendBody: true,
         body: IndexedStack(
           index: _selectedIndex,
           children: [
-            // 3. Search Navigator moved to the first position
             Navigator(
               key: _searchNavKey,
               onGenerateRoute: (routeSettings) {
@@ -51,7 +48,6 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                // Using non-deprecated withValues
                 color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, -2),
@@ -63,12 +59,11 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
               currentIndex: _selectedIndex,
               onTap: (index) => setState(() => _selectedIndex = index),
               type: BottomNavigationBarType.fixed,
-              // Transparent white background
               backgroundColor: Colors.white.withValues(alpha: 0.95),
               selectedItemColor: const Color(0xFFB82065),
               unselectedItemColor: Colors.grey[400],
 
-              iconSize: 32, // Kept the larger icons you liked
+              iconSize: 32,
               selectedFontSize: 14,
               unselectedFontSize: 14,
 

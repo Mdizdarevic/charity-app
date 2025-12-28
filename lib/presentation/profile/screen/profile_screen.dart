@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:charity_app/di.dart';
 import 'package:charity_app/presentation/auth/screen/auth_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Added for Firestore fetching
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lottie/lottie.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -29,7 +29,6 @@ class ProfileScreen extends ConsumerWidget {
       body: authState.when(
         data: (user) {
           if (user != null) {
-            // --- NEW: StreamBuilder to fetch the photoUrl from Firestore ---
             return StreamBuilder<DocumentSnapshot>(
               stream: FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots(),
               builder: (context, snapshot) {
@@ -43,7 +42,6 @@ class ProfileScreen extends ConsumerWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // --- UPDATED: Photo Display Logic ---
                       CircleAvatar(
                         radius: 60,
                         backgroundColor: const Color(0xFFFDEEF4),

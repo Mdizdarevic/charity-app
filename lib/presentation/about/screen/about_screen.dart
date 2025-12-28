@@ -19,7 +19,7 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F2), // Sage/Off-white background
+      backgroundColor: const Color(0xFFF5F5F2),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -28,20 +28,20 @@ class AboutScreen extends StatelessWidget {
           title: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Row(
-              mainAxisSize: MainAxisSize.min, // Keeps the content centered
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset(
                   'assets/images/charity_splash_image.png',
-                  height: 65, // Slightly smaller to fit the text next to it
+                  height: 65,
                   fit: BoxFit.contain,
                 ),
-                const SizedBox(width: 12), // Space between logo and text
+                const SizedBox(width: 12),
                 const Text(
                   "Cherry-T",
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFFB82065), // Your brand color
+                    color: Color(0xFFB82065),
                     letterSpacing: -0.5,
                   ),
                 ),
@@ -95,7 +95,7 @@ class AboutScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 100), // Space for bottom navigation bar
+            const SizedBox(height: 100),
           ],
         ),
       ),

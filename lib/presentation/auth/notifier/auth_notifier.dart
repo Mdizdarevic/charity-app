@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:charity_app/di.dart';
-import 'package:charity_app/domain/model/result.dart'; // Ensure this path is correct!
+import 'package:charity_app/domain/model/result.dart';
 
-/// 1. States defined as simple classes to avoid "Undefined" errors
 sealed class AuthState {
   const AuthState();
 }
@@ -26,7 +25,6 @@ class AuthError extends AuthState {
   const AuthError(this.message);
 }
 
-/// 2. The Notifier using the modern 2025 Notifier pattern
 class AuthNotifier extends Notifier<AuthState> {
   @override
   AuthState build() {
@@ -38,28 +36,20 @@ class AuthNotifier extends Notifier<AuthState> {
 
     final result = await ref.read(userSignInUseCaseProvider).call(email, password);
 
-    // Use pattern matching to handle Ok and Error
-    // Use pattern matching to handle Ok and Error
     switch (result) {
       case Ok(value: _):
         state = const AuthSuccess();
       case Error(error: final e):
-      // 1. Create a variable for your custom message
         String friendlyMessage = "Wrong email password combination.";
-
-        // 3. Update the state with your new message
         state = AuthError(friendlyMessage);
     }
   }
 
-  // Added File? image parameter to match the new flow
   Future<void> signUp(String email, String password, File? image) async {
     state = const AuthLoading();
 
-    // Pass the image into the UseCase call
     final result = await ref.read(userSignUpUseCaseProvider).call(email, password, image);
 
-    // Pattern matching remains exactly as you had it
     switch (result) {
       case Ok(value: _):
         state = const AuthSuccess();
@@ -69,7 +59,6 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 }
 
-/// 3. The Provider that the UI will talk to
 final authNotifierProvider = NotifierProvider.autoDispose<AuthNotifier, AuthState>(
   AuthNotifier.new,
 );

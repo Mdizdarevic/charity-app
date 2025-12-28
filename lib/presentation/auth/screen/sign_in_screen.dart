@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:charity_app/di.dart';
-import 'package:charity_app/presentation/auth/notifier/auth_notifier.dart'; // Import the Notifier
+import 'package:charity_app/presentation/auth/notifier/auth_notifier.dart';
 import 'package:charity_app/presentation/core/app_router.dart';
 import 'package:charity_app/presentation/core/style/extensions.dart';
 import 'package:charity_app/presentation/core/widget/custom_action_button.dart';
-import 'package:charity_app/presentation/auth/widget/custom_text_field.dart';
+import 'package:charity_app/presentation/core/widget/custom_text_field.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
@@ -23,13 +23,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // FIX: Watch authNotifierProvider from your di.dart
     final state = ref.watch(authNotifierProvider);
 
-    // FIX: Listen for AuthSuccess and AuthError
     ref.listen<AuthState>(authNotifierProvider, (_, currentState) {
       if (currentState is AuthSuccess) {
-        // Ensure AppRouter.mainWrapper matches your router's name
         Navigator.of(context).pushReplacementNamed(AppRouter.mainWrapper);
       }
 
@@ -41,7 +38,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: SingleChildScrollView( // Added scroll to prevent overflow
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
@@ -65,10 +62,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   controller: _passwordController,
                   validator: isPasswordValid,
                 ),
-                // ... Row with forgot password
                 const SizedBox(height: 30),
                 CustomActionButton(
-                  // FIX: Check for AuthLoading
                   isLoading: state is AuthLoading,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
@@ -79,7 +74,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                     }
                   },
                 ),
-                // ... Bottom Sign Up row
               ],
             ),
           ),

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:charity_app/presentation/auth/notifier/auth_notifier.dart';
-import 'package:charity_app/presentation/core/widget/auth_components.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
-// Modern Notifier for the toggle state
+import 'package:charity_app/presentation/auth/widget/custom_auth_button.dart';
+import 'package:charity_app/presentation/auth/widget/custom_auth_field.dart';
+
 class AuthModeNotifier extends Notifier<bool> {
   @override
   bool build() => true;
@@ -19,7 +20,6 @@ class AuthScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Using a ValueNotifier to hold the image locally without creating new global providers
     final profileImageNotifier = ValueNotifier<File?>(null);
 
     ref.listen<AuthState>(authNotifierProvider, (previous, next) {
@@ -28,14 +28,14 @@ class AuthScreen extends ConsumerWidget {
           SnackBar(
             duration: const Duration(seconds: 4),
             behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent, // We use a container for the design
+            backgroundColor: Colors.transparent,
             elevation: 0,
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             content: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(50), // Fully rounded like the image
+                borderRadius: BorderRadius.circular(50),
                 border: Border.all(
                   color: const Color(0xFFB82065),
                   width: 3,
@@ -50,11 +50,10 @@ class AuthScreen extends ConsumerWidget {
               ),
               child: Row(
                 children: [
-                  // The Circular Icon
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: const BoxDecoration(
-                      color: Color(0xFFB82065), // Matching the border color
+                      color: Color(0xFFB82065),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -64,7 +63,6 @@ class AuthScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 15),
-                  // The Error Message Text
                   Expanded(
                     child: Text(
                       next.message,
@@ -96,13 +94,11 @@ class AuthScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(24.0),
           child: Column(
             children: [
-              // --- 1. SIGN IN MODE: Show Lottie ONLY ---
               if (isSignIn) ...[
                 Lottie.asset('assets/animations/profile.json', height: 150),
                 const SizedBox(height: 20),
               ],
 
-              // --- 2. CREATE ACCOUNT MODE: Show Camera ONLY ---
               if (!isSignIn) ...[
                 const SizedBox(height: 20),
                 ValueListenableBuilder<File?>(
@@ -137,14 +133,12 @@ class AuthScreen extends ConsumerWidget {
                 const SizedBox(height: 10),
               ],
 
-              // --- 3. MODE HEADER ---
               Text(
                 isSignIn ? "Please Sign In" : "Create Account",
                 style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
 
-              // --- 4. INPUT FIELDS ---
               CustomAuthField(
                 controller: emailController,
                 hint: "Email",
@@ -164,7 +158,6 @@ class AuthScreen extends ConsumerWidget {
 
               const SizedBox(height: 30),
 
-              // --- 5. ACTION BUTTON ---
               if (authState is AuthLoading)
                 const CircularProgressIndicator()
               else
@@ -177,10 +170,8 @@ class AuthScreen extends ConsumerWidget {
                   if (isSignIn) {
                     ref.read(authNotifierProvider.notifier).signIn(email, password);
                   } else {
-                  // Access the value from your ValueNotifier
                   final imageFile = profileImageNotifier.value;
 
-                  // Now pass all 3: email, password, AND the image
                   ref.read(authNotifierProvider.notifier).signUp(email, password, imageFile);
                     }
                   },
@@ -188,7 +179,6 @@ class AuthScreen extends ConsumerWidget {
 
               const SizedBox(height: 16),
 
-              // --- 6. TOGGLE MODE BUTTON ---
               TextButton(
                 onPressed: () => ref.read(authModeProvider.notifier).toggle(),
                 child: Text(

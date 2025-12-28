@@ -7,32 +7,32 @@ A Flutter application that allows users to search for IRS-verified non-profits v
 
 # Learning Outcomes
 
-### LO1: Tooling and Environment
-**Implementation:** Configured the Flutter SDK for web targets and managed the production build using the Flutter CLI.
-**Location:** Project Root & GitHub Actions Tab.
+### LO1: 
+**Implementation:** Permissions added for device hardware management for profile photo feature
+**Location:** `android/app/src/main/AndroidManifest.xml` `lib/presentation/auth/screen/auth_screen.dart`
 
-### LO2: UI/UX Design and Implementation
-**Implementation:** Built a responsive layout using `FutureBuilder` to toggle between a `CircularProgressIndicator` and a results list based on the connection state.
-**Location:** `lib/screens/charity_search_screen.dart`.
+### LO2: 
+**Implementation:** Implemented Clean architecture (data, domain, presentation) to show separation of concerns in the code
+**Location:** `lib`
 
-### LO3: Software Architecture and Patterns
-**Implementation:** Separated data fetching (Service) and data structure (Model) from the UI (View), following a clean architectural pattern.
-**Location:** `lib/services/api_service.dart` and `lib/models/charity.dart`.
+### LO3: 
+**Implementation:** Developed custom animation to improve user experience of favoriting charities
+**Location:** `lib/presentation/charities/screen/charity_details_screen`
 
-### LO4: Logic and State Management
-**Implementation:** Utilized `setState` to update the UI when users type into the `TextEditingController` and added logic to prevent empty API queries.
-**Location:** `lib/screens/charity_search_screen.dart`.
+### LO4: 
+**Implementation:** Developed complex UI elements (widgets) which react to user interaction
+**Location:** `lib/presentation/core/widget/custom_action_button.dat`  `../../widget/custom_text_field.dat`
 
-### LO5: Deployment and Distribution
-**Implementation:** Deployed a compiled production build to GitHub Pages using the `--base-href` flag to match the repository name.
-**Location:** `gh-pages` branch on GitHub.
+### LO5: 
+**Implementation:** Integrate external frameworks like Firebase into your application for authentication
+**Location:** `lib/data/client/firebase_auth.dart`  `lib/presentation/auth/notifier/auth_notifier.dart`
 
-### LO6: Data Management & Persistence
-**Implementation:** Implemented local storage logic to save and retrieve search history strings, ensuring data persists after the app is closed.
-**Location:** `lib/screens/charity_search_screen.dart`.
+### LO6: 
+**Implementation:** Use the Hive database to cache search history data
+**Location:** `lib/data/local/search_history_service.dart`.
 
-### LO7: Asynchronous Programming
+### LO7:
 **Implementation:** Used `async/await` syntax with a 10-second `.timeout()`, and implemented a `try-catch` block specifically for `http.ClientException` to handle network failures.
-**Location:** `lib/services/api_service.dart` (Function: `getAllCharities`).
+**Location:** `lib/data/client/charity_api_client.dart` 
 
 ---

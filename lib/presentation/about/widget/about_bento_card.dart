@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart'; // Make sure you have lottie in pubspec.yaml
+import 'package:lottie/lottie.dart';
 
 class AboutBentoCard extends StatelessWidget {
   final String title;
   final String content;
-  final String lottieAsset; // Changed from IconData icon
+  final String lottieAsset;
   final Color color;
   final Color textColor;
   final bool isMainBrandCard;
@@ -13,7 +13,7 @@ class AboutBentoCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.content,
-    required this.lottieAsset, // Updated parameter
+    required this.lottieAsset,
     required this.color,
     required this.textColor,
     this.isMainBrandCard = false,
@@ -29,7 +29,7 @@ class AboutBentoCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(8), // Using withAlpha for compatibility
+            color: Colors.black.withAlpha(8),
             blurRadius: 10,
             offset: const Offset(0, 4),
           )
@@ -38,7 +38,6 @@ class AboutBentoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Replaced Icon with Lottie.asset
           SizedBox(
             height: 40,
             child: Lottie.asset(

@@ -7,31 +7,27 @@ class CharityApiClient {
 
   String searchTerm = "charity";
 
-  void setSearchTerm(String term) {
-    searchTerm = term;
-  }
-
   Future<Map<String, dynamic>> getAllCharities() async {
     try {
       final url = Uri.parse('$baseUrl/search/$searchTerm?apiKey=$apiKey&take=50');
 
-      // 1. LO7: Added .timeout to prevent the app from hanging on slow networks
+      // LO7: Added .timeout to prevent the app from hanging on slow networks
       final response = await http.get(url).timeout(
         const Duration(seconds: 10),
       );
 
-      // 2. LO7: Checking status code to handle API errors before decoding
+      // LO7: Checking status code to handle API errors
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {
         throw Exception('Server Error: ${response.statusCode}');
       }
     } on http.ClientException {
+
       // LO7: Specific catch for network/connectivity issues
       throw Exception('No Internet connection.');
     } catch (e) {
-      print('PHYSICAL NETWORK ERROR: $e');
-      throw Exception('Connection failed. Check your network or API key.');
+        throw Exception('Connection failed. Check your network or API key.');
     }
   }
 

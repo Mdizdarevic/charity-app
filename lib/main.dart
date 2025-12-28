@@ -9,8 +9,8 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Hive.initFlutter(); // Starts the engine
-  await Hive.openBox<String>('searchHistoryBox'); // Pre-opens the container
+  await Hive.initFlutter();
+  await Hive.openBox<String>('searchHistoryBox');
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
