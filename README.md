@@ -1,4 +1,4 @@
-# Cherry-T App
+# Cherry App
 A Flutter application that allows users to search for IRS-verified non-profits via the Every.org API.
 
 ## Live Web App: [https://mdizdarevic.github.io/charity-app/](https://mdizdarevic.github.io/charity-app/)

@@ -15,6 +15,15 @@ class SplashScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Text(
+                'Welcome to Cherry',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 30),
               Image.asset('assets/images/charity_splash_image.png'),
               Lottie.asset('assets/animations/loading_dots.json', width: 150),
             ],

@@ -37,7 +37,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 const Text(
-                  "Cherry-T",
+                  "Cherry",
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -55,7 +55,7 @@ class AboutScreen extends StatelessWidget {
           children: [
             AboutBentoCard(
               title: "\$96 Million",
-              content: "Scammers exploit our natural desire to help others using AI, fake identities, and realistic-looking donation sites. In 2024, the FBI reported nearly \$96 million in losses to fraudulent charities. Cherry-T was built to stop this.",
+              content: "Scammers exploit our natural desire to help others using AI, fake identities, and realistic-looking donation sites. In 2024, the FBI reported nearly \$96 million in losses to fraudulent charities. Cherry was built to stop this.",
               lottieAsset: 'assets/animations/thief.json',
               color: Colors.white,
               textColor: Colors.black87,
